@@ -127,7 +127,7 @@ export const tenants = new Hono()
       .from(schema.tenants)
       .where(eq(schema.tenants.ownerId, user.id));
 
-    const baseUrl = process.env.WEBSITE_URL ?? "";
-    const webhookUrl = tenant ? `${baseUrl}api/webhook/shopee/${tenant.id}` : null;
+    const baseUrl = (process.env.WEBSITE_URL ?? "").replace(/\/+$/, "");
+    const webhookUrl = tenant ? `${baseUrl}/api/webhook/shopee/${tenant.id}` : null;
     return c.json({ webhookUrl, tenantId: tenant?.id }, 200);
   });
