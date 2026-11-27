@@ -17,6 +17,7 @@
     "start": "bun src/server.ts"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.152",
     "@ai-sdk/react": "^3.0.187",
     "@better-auth/expo": "1.4.22",
     "@libsql/client": "^0.17.2",
