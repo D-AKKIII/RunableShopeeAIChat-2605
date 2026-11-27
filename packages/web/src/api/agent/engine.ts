@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { gateway } from "./gateway";
+import { getGeminiModel } from "./gateway";
 
 export type ProcessResult = {
   reply: string;
@@ -141,9 +141,8 @@ ${kbContext}${orderContext}${itemContext}
 
   try {
     const { text } = await generateText({
-      model: gateway("google/gemini-3-flash"),
+      model: getGeminiModel(geminiApiKey),
       prompt: systemPrompt,
-      headers: geminiApiKey ? { "X-Custom-Gemini-Key": geminiApiKey } : undefined,
     });
 
     // Parse confidence and source from response
