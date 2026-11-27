@@ -7,7 +7,7 @@ import { processMessage } from "../agent/engine";
 import { sendShopeeReply } from "../services/shopee";
 import { getValidAccessToken } from "../lib/shopee-auth";
 import { generateText } from "ai";
-import { gateway } from "../agent/gateway";
+import { getGeminiModel } from "../agent/gateway";
 import { randomUUID } from "crypto";
 
 export const logs = new Hono()
@@ -183,9 +183,8 @@ export const logs = new Hono()
 
     try {
       const { text: result } = await generateText({
-        model: gateway("google/gemini-3-flash"),
+        model: getGeminiModel(settings?.geminiApiKey),
         prompt: `以下のテキストを自然な日本語に翻訳してください。翻訳文のみを返してください（説明や注釈は不要）:\n\n${text}`,
-        headers: settings?.geminiApiKey ? { "X-Custom-Gemini-Key": settings.geminiApiKey } : undefined,
       });
       return c.json({ translated: result.trim() }, 200);
     } catch {
@@ -238,14 +237,13 @@ export const logs = new Hono()
     let finalReply = memo;
     try {
       const { text: translated } = await generateText({
-        model: gateway("google/gemini-3-flash"),
+        model: getGeminiModel(settings?.geminiApiKey),
         prompt: `あなたはカスタマーサポート担当者です。以下の日本語メモを元に、丁寧で自然な${targetLang}の返信文を生成してください。
 返信文のみを返してください（説明・注釈・前置きは不要）。
 
 顧客の問い合わせ: ${originalMessage}
 
 担当者メモ（日本語）: ${memo}`,
-        headers: settings?.geminiApiKey ? { "X-Custom-Gemini-Key": settings.geminiApiKey } : undefined,
       });
       finalReply = translated.trim();
     } catch (err) {
